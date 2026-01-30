@@ -1,1 +1,0 @@
-// Shows detected issues
