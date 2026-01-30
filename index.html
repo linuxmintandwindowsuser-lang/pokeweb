@@ -1,35 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>PokeWeb Static Working</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="style.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<meta charset="UTF-8">
+<title>PokeWeb Static Full</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" href="style.css"/>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
 <body>
 <header>
   <h1>🃏 PokeWeb</h1>
-  <p>Image → Price • OCR • Risk Scan</p>
+  <p>Image → Price • OCR • Risk Scan • General Info</p>
 </header>
 
 <main>
+  <!-- Image Upload -->
   <section class="card">
     <h2>1) Upload Card Image</h2>
     <input type="file" id="imageInput" accept="image/*"/>
-    <button onclick="runAll()">Analyze Image</button>
+    <button id="imageBtn" onclick="runImage()">Analyze Image</button>
+  </section>
+
+  <!-- Manual Search -->
+  <section class="card">
+    <h2>2) Search by Card Name</h2>
+    <button id="searchToggle" onclick="toggleSearch()">Search</button>
+    <div id="searchBox" style="display:none; margin-top:0.5rem;">
+      <input id="cardName" placeholder="Charizard"/>
+      <button id="searchBtn" onclick="runSearch()">Lookup</button>
+    </div>
+  </section>
+
+  <!-- Action Buttons -->
+  <section class="card">
+    <h2>3) Actions</h2>
+    <button id="riskBtn" onclick="showRisk()" disabled>Risk Scan</button>
+    <button id="priceBtn" onclick="showPrice()" disabled>Price Info</button>
+    <button id="generalBtn" onclick="showGeneral()" disabled>General Info (Beta)</button>
+  </section>
+
+  <!-- Results -->
+  <section class="card">
+    <h2>Results</h2>
     <pre id="ocrOut"></pre>
     <pre id="riskOut"></pre>
     <pre id="priceOut"></pre>
-  </section>
-
-  <section class="card">
-    <button id="toggleSearch" onclick="toggleSearch()">Search by Name</button>
-    <div id="searchBox" style="display:none; margin-top:0.5rem;">
-      <input id="cardName" placeholder="Charizard"/>
-      <button onclick="manualSearch()">Search</button>
-      <pre id="searchOut"></pre>
-    </div>
+    <pre id="generalOut"></pre>
   </section>
 </main>
 
