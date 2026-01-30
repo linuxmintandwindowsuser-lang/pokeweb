@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PokeWeb</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>🃏 PokeWeb</h1>
+    <p>Card Price • Image → English • Authenticity Risk (Assistive)</p>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>1) Check Card Price</h2>
+      <input id="cardName" placeholder="Charizard" />
+      <button onclick="checkPrice()">Check Price</button>
+      <pre id="priceOut"></pre>
+    </section>
+
+    <section class="card">
+      <h2>2) Image → English (OCR)</h2>
+      <input type="file" id="imageInput" accept="image/*"/>
+      <button onclick="runOCR()">Extract Text</button>
+      <pre id="ocrOut"></pre>
+    </section>
+
+    <section class="card">
+      <h2>3) Authenticity Risk Scan</h2>
+      <button onclick="riskScan()">Analyze Image</button>
+      <pre id="riskOut"></pre>
+    </section>
+  </main>
+
+  <footer>
+    <small>
+      ⚠️ This tool provides probabilistic analysis only. Physical inspection is required for certainty.
+    </small>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
