@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PokeWeb Static</title>
+  <title>PokeWeb Static Working</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="style.css"/>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -18,23 +18,23 @@
     <h2>1) Upload Card Image</h2>
     <input type="file" id="imageInput" accept="image/*"/>
     <button onclick="runAll()">Analyze Image</button>
-    <pre id="priceOut"></pre>
     <pre id="ocrOut"></pre>
     <pre id="riskOut"></pre>
+    <pre id="priceOut"></pre>
   </section>
 
   <section class="card">
     <button id="toggleSearch" onclick="toggleSearch()">Search by Name</button>
     <div id="searchBox" style="display:none; margin-top:0.5rem;">
       <input id="cardName" placeholder="Charizard"/>
-      <button onclick="checkPrice()">Search</button>
+      <button onclick="manualSearch()">Search</button>
       <pre id="searchOut"></pre>
     </div>
   </section>
 </main>
 
 <footer>
-  <small>⚠️ Probabilistic analysis only. Physical inspection required for certainty.</small>
+  <small>⚠️ Probabilistic analysis only. Physical inspection required.</small>
 </footer>
 
 <script src="app.js"></script>
