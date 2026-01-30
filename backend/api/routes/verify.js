@@ -1,1 +1,0 @@
-// Authenticity risk endpoint
