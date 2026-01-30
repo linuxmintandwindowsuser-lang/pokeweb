@@ -1,6 +1,6 @@
-// State
 let currentCardName = '';
 let currentOCR = '';
+let currentTranslated = '';
 let currentPrice = '';
 let currentRisk = '';
 
@@ -10,10 +10,11 @@ function toggleSearch(){
   box.style.display = box.style.display==='none'?'block':'none';
 }
 
-// Image upload flow
+// OCR + translation + risk + price lookup
 async function runImage(){
   const file=document.getElementById('imageInput').files[0];
   if(!file) return alert("Upload an image first");
+
   document.getElementById('ocrOut').textContent='Running OCR...';
   document.getElementById('riskOut').textContent='';
   document.getElementById('priceOut').textContent='';
@@ -24,7 +25,17 @@ async function runImage(){
     const result=await Tesseract.recognize(file,'eng+jpn');
     currentOCR=result.data.text.trim();
     document.getElementById('ocrOut').textContent=`OCR Text:\n${currentOCR||'(no text detected)'}`;
-    currentCardName=currentOCR.split('\n')[0] || '';
+
+    // Translate if Japanese detected
+    if(/[^\x00-\x7F]/.test(currentOCR)){
+      document.getElementById('ocrOut').textContent += '\n\nTranslating Japanese...';
+      currentTranslated = await translateToEnglish(currentOCR);
+      document.getElementById('ocrOut').textContent += `\n\nTranslated:\n${currentTranslated}`;
+    } else {
+      currentTranslated = currentOCR;
+    }
+
+    currentCardName=currentTranslated.split('\n')[0] || '';
   }catch(e){
     document.getElementById('ocrOut').textContent='OCR Error';
     return;
@@ -35,25 +46,46 @@ async function runImage(){
   computeRisk();
 }
 
+// Translate using LibreTranslate
+async function translateToEnglish(text){
+  try{
+    const r=await fetch('https://libretranslate.com/translate',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        q:text,
+        source:'auto',
+        target:'en'
+      })
+    });
+    const j=await r.json();
+    return j.translatedText || text;
+  }catch(e){
+    return text;
+  }
+}
+
 // Manual search
 async function runSearch(){
   const name=document.getElementById('cardName').value.trim();
   if(!name) return alert("Enter a card name");
   currentCardName=name;
-  document.getElementById('ocrOut').textContent='Manual search selected';
+  currentOCR='No OCR for manual search';
+  currentTranslated=name;
+  document.getElementById('ocrOut').textContent=currentOCR;
   enableActionButtons();
   lookupPrice(name);
   computeRisk();
 }
 
-// Enable risk/price/general buttons
+// Enable buttons
 function enableActionButtons(){
   document.getElementById('riskBtn').disabled=false;
   document.getElementById('priceBtn').disabled=false;
   document.getElementById('generalBtn').disabled=false;
 }
 
-// Risk scan (simulated)
+// Risk scan
 function computeRisk(){
   const score=Math.floor(60+Math.random()*30);
   const risk=score>85?'Low':score>70?'Medium':'High';
@@ -69,7 +101,7 @@ async function lookupPrice(name){
     const j=await r.json();
     if(!j.data||!j.data.length){
       currentPrice='Price: No card found';
-    }else{
+    } else {
       const card=j.data[0];
       const prices=card.tcgplayer?.prices;
       let out=`Name: ${card.name}\nSet: ${card.set.name}\n`;
@@ -92,6 +124,7 @@ function showGeneral(){
 `--- General Info (Beta) ---
 Card Name: ${currentCardName}
 OCR Text: ${currentOCR}
+Translated Text: ${currentTranslated}
 Price Info: ${currentPrice}
 Risk Info: ${currentRisk}`;
 }
